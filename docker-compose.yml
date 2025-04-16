@@ -1,0 +1,68 @@
+services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - trader-net
+
+  data_collector:
+    build:
+      context: ./data_collector
+    container_name: data_collector
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - BACKTEST=false
+    networks:
+      - trader-net
+  
+  signal_engine:
+    build:
+      context: ./signal_engine
+    container_name: signal_engine
+    ports:
+      - "5001:5001"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+    networks:
+      - trader-net
+  
+  # mispricing_engine:
+  #   build:
+  #     context: ./mispricing_engine
+  #     dockerfile: ./docker/Dockerfile.mispricing_engine
+  #   container_name: mispricing_engine
+  #   ports:
+  #     - "5002:5002"
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_HOST=redis
+  #   networks:
+  #     - trader-net
+
+
+  # backtester:
+  #   build:
+  #     context: ./backtester
+  #     dockerfile: ./docker/Dockerfile.backtester
+  #   container_name: backtester
+  #   ports:
+  #     - "5003:5003"
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_HOST=redis
+  #   networks:
+  #     - trader-net
+
+networks:
+  trader-net:
+    driver: bridge

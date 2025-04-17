@@ -34,19 +34,18 @@ services:
     networks:
       - trader-net
   
-  # mispricing_engine:
-  #   build:
-  #     context: ./mispricing_engine
-  #     dockerfile: ./docker/Dockerfile.mispricing_engine
-  #   container_name: mispricing_engine
-  #   ports:
-  #     - "5002:5002"
-  #   depends_on:
-  #     - redis
-  #   environment:
-  #     - REDIS_HOST=redis
-  #   networks:
-  #     - trader-net
+  mispricing_engine:
+    build:
+      context: ./mispricing_engine
+    container_name: mispricing_engine
+    ports:
+      - "5002:5002"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+    networks:
+      - trader-net
 
 
   # backtester:

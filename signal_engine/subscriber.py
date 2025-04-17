@@ -12,7 +12,7 @@ async def subscribe_to_market_data():
     loop = asyncio.get_event_loop()
     while True:
         message = await loop.run_in_executor(None, pubsub.get_message)
-        if message:
+        if message and message["type"] == "message":
             try:
                 data = json.loads(message["data"])
                 yield data

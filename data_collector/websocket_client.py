@@ -10,6 +10,7 @@ async def listen_to_binance():
             print("[WebSocket] ✅ Connected to Binance.")
             async for message in ws:
                 data = json.loads(message)
+                print(data)
                 yield data
     except Exception as e:
         print(f"[WebSocket] ❌ Connection error: {e}")

@@ -14,6 +14,7 @@ def analyze_order_book(data, history=[]):
         # ───────────── Spread Spike ─────────────
         if spread > 80:
             return {
+                "symbol": data.get("s", ""),
                 "type": "ALERT",
                 "confidence": 0.85,
                 "reason": f"Spread spike: ${spread:.2f}",
@@ -26,6 +27,7 @@ def analyze_order_book(data, history=[]):
 
         if bid_volume > 100:
             return {
+                "symbol": data.get("s", ""),
                 "type": "BUY",
                 "confidence": 0.92,
                 "reason": f"Buy wall detected (Top 10 = {bid_volume:.2f} BTC)",
@@ -34,6 +36,7 @@ def analyze_order_book(data, history=[]):
 
         if ask_volume > 100:
             return {
+                "symbol": data.get("s", ""),
                 "type": "SELL",
                 "confidence": 0.92,
                 "reason": f"Sell wall detected (Top 10 = {ask_volume:.2f} BTC)",
@@ -45,6 +48,7 @@ def analyze_order_book(data, history=[]):
             obi = (bid_volume - ask_volume) / (bid_volume + ask_volume)
             if obi > 0.7:
                 return {
+                    "symbol": data.get("s", ""),
                     "type": "BUY",
                     "confidence": 0.88,
                     "reason": f"Strong bid-side imbalance (OBI = {obi:.2f})",
@@ -52,6 +56,7 @@ def analyze_order_book(data, history=[]):
                 }
             elif obi < -0.7:
                 return {
+                    "symbol": data.get("s", ""),
                     "type": "SELL",
                     "confidence": 0.88,
                     "reason": f"Strong ask-side imbalance (OBI = {obi:.2f})",
@@ -65,6 +70,7 @@ def analyze_order_book(data, history=[]):
             price_diff = max(recent) - min(recent)
             if price_diff > 150:
                 return {
+                    "symbol": data.get("s", ""),
                     "type": "MOMENTUM",
                     "confidence": 0.87,
                     "reason": f"Price range = ${price_diff:.2f} (last 5 ticks)",
@@ -75,6 +81,7 @@ def analyze_order_book(data, history=[]):
         print(f"[Logic]: Error: {e}")
 
     return {
+        "symbol": data.get("s", ""),
         "type": "NO_SIGNAL",
         "confidence": 0.0,
         "reason": "No valid signal detected",
